@@ -1,10 +1,8 @@
 import os
-from typing import List
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
-from langchain_core.prompts import PromptTemplate, FewShotPromptTemplate, ChatPromptTemplate, \
-    FewShotChatMessagePromptTemplate
 from dotenv import load_dotenv
+import gradio as gr
 
 # In[5]:
 load_dotenv()
@@ -13,7 +11,6 @@ class ChatBot:
     def __init__(self,
                  name: str,
                  instructions: str,
-                 examples: List[dict],
                  model: str = "gpt-4o-mini",
                  temperature: float = 0.8):
         self.name = name
@@ -25,22 +22,6 @@ class ChatBot:
             api_key=os.getenv("OPENAI_API_KEY"),
         )
 
-        example_prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", instructions),
-                ("human", "{input}"),
-                ("ai", "{output}"),
-            ]
-        )
-        prompt_template = FewShotChatMessagePromptTemplate(
-            example_prompt=example_prompt,
-            examples=examples,
-        )
-
-        # Memory
-        memory = [
-            SystemMessage(content="You are a cybersecurity awareness assistant.")
-        ]
 
         self.messages = [SystemMessage(content=instructions)]
 
@@ -90,7 +71,7 @@ Response Style:
 
 Your goal is to help users stay informed, protected, and confident while using the internet and digital systems"""
 
-# TODO - Create more Few Shot Examples
+#
 examples = [{
     "input": "what is phishing?",
     "output": """It is a type of attack where scammers try to extract personal information for instance, password, bank detail, othre sensitive information. 
@@ -109,11 +90,7 @@ examples = [{
 ]
 
 
-bot = ChatBot(name = "Alax", instructions = system_prompt, examples = examples)
-print(bot.invoke("what is firewall").content)
-
-import gradio as gr
-
+bot = ChatBot(name = "Alax", instructions = system_prompt)
 def respond(message, history):
     return bot.invoke(message).content
 gr.ChatInterface(
