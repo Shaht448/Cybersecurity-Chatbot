@@ -91,7 +91,7 @@ examples = [{
 
 
 bot = ChatBot(name = "Alax", instructions = system_prompt)
-def respond(message):
+def respond(message, history):
     return bot.invoke(message).content
 gr.ChatInterface(
     fn=respond,
