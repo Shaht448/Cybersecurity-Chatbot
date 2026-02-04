@@ -15,7 +15,7 @@ class ChatBot:
                  temperature: float = 0.8):
         self.name = name
 
-        # TODO - Instantiate your chat model properly
+
         self.llm = ChatOpenAI(
             model=model,
             temperature=temperature,
@@ -36,7 +36,7 @@ class ChatBot:
         self.messages.append(ai_msg)
         return ai_msg
 
-
+#Prompt for the chatbot
 system_prompt = """You are a user-friendly Cybersecurity Assistant.
 
 Your role is to help users understand cybersecurity threats, stay safe online, and improve their overall digital security awareness.
@@ -71,7 +71,7 @@ Response Style:
 
 Your goal is to help users stay informed, protected, and confident while using the internet and digital systems"""
 
-#
+#example input and output for chatbot
 examples = [{
     "input": "what is phishing?",
     "output": """It is a type of attack where scammers try to extract personal information for instance, password, bank detail, othre sensitive information. 
@@ -91,7 +91,7 @@ examples = [{
 
 
 bot = ChatBot(name = "Alax", instructions = system_prompt)
-def respond(message, history):
+def respond(message):
     return bot.invoke(message).content
 gr.ChatInterface(
     fn=respond,
